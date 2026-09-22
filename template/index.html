@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+
+{% block title %}Nedora | Handcrafted Candles{% endblock %}
+
+{% block content %}
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="home">
+    <div class="hero-content">
+        <p class="small-title">HANDCRAFTED WITH LOVE</p>
+
+        <h1>
+            Light Up Your<br>
+            <span>Beautiful Moments</span>
+        </h1>
+
+        <p>
+            Hand-poured candles created to bring warmth,
+            fragrance and calm into your everyday life.
+        </p>
+
+        <div class="hero-buttons">
+            <a href="{% url 'shop' %}" class="btn primary">Shop Collection</a>
+            <a href="#about" class="btn secondary">Discover Our Story</a>
+        </div>
+    </div>
+
+    <div class="hero-image">
+        <div class="candle-illustration">
+            <div class="flame"></div>
+            <div class="candle-body">
+                <div class="candle-label">NEDORA</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= CATEGORIES ================= -->
+<section class="categories">
+    <div class="container">
+        <p class="section-subtitle">EXPLORE OUR COLLECTION</p>
+        <h2>Find Your Perfect Candle</h2>
+
+        <div class="category-grid">
+            <div class="category-card">
+                <div class="category-icon">🌸</div>
+                <h3>Floral</h3>
+                <p>Soft and beautiful floral fragrances.</p>
+                <a href="{% url 'shop' %}">Explore →</a>
+            </div>
+
+            <div class="category-card">
+                <div class="category-icon">🌿</div>
+                <h3>Fresh</h3>
+                <p>Fresh scents inspired by nature.</p>
+                <a href="{% url 'shop' %}">Explore →</a>
+            </div>
+
+            <div class="category-card">
+                <div class="category-icon">🍯</div>
+                <h3>Sweet</h3>
+                <p>Warm and delicious fragrances.</p>
+                <a href="{% url 'shop' %}">Explore →</a>
+            </div>
+
+            <div class="category-card">
+                <div class="category-icon">🎁</div>
+                <h3>Gift Sets</h3>
+                <p>Beautiful candles for every occasion.</p>
+                <a href="{% url 'shop' %}">Explore →</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= PRODUCTS ================= -->
+<section class="products" id="shop">
+    <div class="container">
+        <div class="section-heading">
+            <div>
+                <p class="section-subtitle">OUR FAVORITES</p>
+                <h2>Best Selling Candles</h2>
+            </div>
+            <a href="{% url 'shop' %}" class="view-all">View All Products →</a>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <div class="product-image product-one">
+                    <span class="badge">BEST SELLER</span>
+                    <button class="heart">♡</button>
+                </div>
+                <div class="product-info">
+                    <p class="product-category">Scented Candle</p>
+                    <h3>Vanilla Dream</h3>
+                    <p class="description">Warm vanilla with a soft creamy fragrance.</p>
+                    <div class="product-bottom">
+                        <strong>₹499</strong>
+                        <button class="add-cart">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image product-two">
+                    <span class="badge new">NEW</span>
+                    <button class="heart">♡</button>
+                </div>
+                <div class="product-info">
+                    <p class="product-category">Floral Candle</p>
+                    <h3>Rose Garden</h3>
+                    <p class="description">A delicate rose fragrance for peaceful evenings.</p>
+                    <div class="product-bottom">
+                        <strong>₹599</strong>
+                        <button class="add-cart">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image product-three">
+                    <button class="heart">♡</button>
+                </div>
+                <div class="product-info">
+                    <p class="product-category">Luxury Candle</p>
+                    <h3>Amber Glow</h3>
+                    <p class="description">A warm amber fragrance with a luxurious finish.</p>
+                    <div class="product-bottom">
+                        <strong>₹699</strong>
+                        <button class="add-cart">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image product-four">
+                    <span class="badge">POPULAR</span>
+                    <button class="heart">♡</button>
+                </div>
+                <div class="product-info">
+                    <p class="product-category">Decorative Candle</p>
+                    <h3>Cozy Bloom</h3>
+                    <p class="description">A beautiful candle designed for your special spaces.</p>
+                    <div class="product-bottom">
+                        <strong>₹449</strong>
+                        <button class="add-cart">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section class="about" id="about">
+    <div class="about-image">
+        <div class="about-candle">
+            <div class="flame"></div>
+            <div class="candle-body"><span>NEDORA</span></div>
+        </div>
+    </div>
+
+    <div class="about-content">
+        <p class="section-subtitle">OUR STORY</p>
+        <h2>Made Slowly.<br>Made With Love.</h2>
+
+        <p>
+            At Nedora, we believe that little moments deserve
+            to feel special. Every candle is carefully hand-poured
+            in small batches with attention to fragrance, design
+            and quality.
+        </p>
+
+        <p>
+            From a relaxing evening at home to a thoughtful gift
+            for someone special, our candles are created to add
+            warmth and beauty to everyday moments.
+        </p>
+
+        <a href="#" class="btn primary">Read Our Story</a>
+    </div>
+</section>
+
+<!-- ================= WHY US ================= -->
+<section class="why-us" id="why-us">
+    <div class="container">
+        <p class="section-subtitle">WHY NEDORA</p>
+        <h2>Made For Moments That Matter</h2>
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🕯️</div>
+                <h3>Handcrafted</h3>
+                <p>Every candle is carefully hand-poured in small batches.</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">🌿</div>
+                <h3>Quality Ingredients</h3>
+                <p>Carefully selected wax and fragrances for a beautiful experience.</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">💝</div>
+                <h3>Made For Gifting</h3>
+                <p>Thoughtfully designed candles for birthdays and special occasions.</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">✨</div>
+                <h3>Beautiful Designs</h3>
+                <p>Candles that look beautiful even when they are not lit.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= TESTIMONIAL ================= -->
+<section class="testimonial">
+    <div class="container">
+        <p class="section-subtitle">CUSTOMER LOVE</p>
+        <div class="quote">
+            “The fragrance is beautiful and the candle looks even prettier in my room.”
+        </div>
+        <p class="customer">— Happy Customer</p>
+    </div>
+</section>
+
+<!-- ================= NEWSLETTER ================= -->
+<section class="newsletter">
+    <div class="container newsletter-box">
+        <div>
+            <p class="section-subtitle">STAY IN THE GLOW</p>
+            <h2>Join Our Candle Community</h2>
+            <p>Get updates about new collections, special offers and gifting ideas.</p>
+        </div>
+
+        <form class="subscribe">
+            <input type="email" placeholder="Enter your email">
+            <button type="submit">Subscribe</button>
+        </form>
+    </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="contact" id="contact">
+    <div class="container">
+        <p class="section-subtitle">GET IN TOUCH</p>
+        <h2>Let's Talk</h2>
+
+        <div class="contact-grid">
+            <div>
+                <h3>Have a question?</h3>
+                <p>
+                    We'd love to hear from you.
+                    Contact us for product questions,
+                    custom candles or gifting requirements.
+                </p>
+                <p>📧 hello@nedora.com</p>
+                <p>📱 +91 98765 43210</p>
+                <p>📍 Kerala, India</p>
+            </div>
+
+            <form class="contact-form">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <textarea rows="5" placeholder="Your Message" required></textarea>
+                <button class="btn primary" type="submit">Send Message</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

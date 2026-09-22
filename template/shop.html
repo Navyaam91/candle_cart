@@ -1,0 +1,885 @@
+{% extends 'base.html' %}
+
+{% block title %}Shop | Nedora Handcrafted Candles{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ============ SHOP PAGE (scoped) ============ */
+    .shop-page {
+        --shop-bg: #fbf6f1;
+        --shop-card: #ffffff;
+        --shop-ink: #3b2a24;
+        --shop-muted: #8a766d;
+        --shop-line: #eaddd3;
+        --shop-accent: #b5654a;
+        --shop-accent-dark: #8f4a33;
+        --shop-soft: #f5e6dc;
+        background: var(--shop-bg);
+        color: var(--shop-ink);
+        font-family: 'Poppins', sans-serif;
+        min-height: 70vh;
+    }
+
+    .shop-page .shop-container {
+        width: min(1200px, 92%);
+        margin: 0 auto;
+    }
+
+    /* ---------- Header banner ---------- */
+    .shop-hero {
+        padding: 72px 0 40px;
+        text-align: center;
+        background:
+            radial-gradient(circle at 50% 0%, #f8e3d3 0%, rgba(248, 227, 211, 0) 60%),
+            var(--shop-bg);
+    }
+    .shop-hero h1 {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(2.4rem, 5vw, 3.8rem);
+        font-weight: 600;
+        line-height: 1.1;
+        margin: 0 0 12px;
+    }
+    .shop-hero p {
+        max-width: 520px;
+        margin: 0 auto;
+        color: var(--shop-muted);
+        font-weight: 300;
+        line-height: 1.7;
+    }
+    .breadcrumb {
+        font-size: 0.8rem;
+        color: var(--shop-muted);
+        margin-bottom: 18px;
+    }
+    .breadcrumb a { color: var(--shop-accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+
+    /* ---------- Toolbar ---------- */
+    .shop-toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: rgba(251, 246, 241, 0.92);
+        backdrop-filter: blur(8px);
+        border-top: 1px solid var(--shop-line);
+        border-bottom: 1px solid var(--shop-line);
+        padding: 16px 0;
+    }
+    .toolbar-row {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .search-box {
+        position: relative;
+        flex: 1 1 280px;
+        max-width: 380px;
+    }
+    .search-box svg {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 18px;
+        height: 18px;
+        stroke: var(--shop-muted);
+        pointer-events: none;
+    }
+    .search-box input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px 40px 12px 44px;
+        border: 1px solid var(--shop-line);
+        border-radius: 999px;
+        background: #fff;
+        font: inherit;
+        font-size: 0.9rem;
+        color: var(--shop-ink);
+        transition: border-color .2s, box-shadow .2s;
+    }
+    .search-box input:focus {
+        outline: none;
+        border-color: var(--shop-accent);
+        box-shadow: 0 0 0 4px rgba(181, 101, 74, 0.15);
+    }
+    .search-clear {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 26px;
+        height: 26px;
+        border: 0;
+        border-radius: 50%;
+        background: var(--shop-soft);
+        color: var(--shop-accent-dark);
+        cursor: pointer;
+        font-size: 1rem;
+        line-height: 1;
+        display: none;
+    }
+    .search-clear.visible { display: block; }
+
+    .sort-box {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.85rem;
+        color: var(--shop-muted);
+    }
+    .sort-box select {
+        padding: 11px 38px 11px 18px;
+        border: 1px solid var(--shop-line);
+        border-radius: 999px;
+        background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%238a766d' stroke-width='2'%3E%3Cpath d='m1 1 5 5 5-5'/%3E%3C/svg%3E") no-repeat right 16px center;
+        appearance: none;
+        -webkit-appearance: none;
+        font: inherit;
+        font-size: 0.88rem;
+        color: var(--shop-ink);
+        cursor: pointer;
+    }
+    .sort-box select:focus {
+        outline: none;
+        border-color: var(--shop-accent);
+        box-shadow: 0 0 0 4px rgba(181, 101, 74, 0.15);
+    }
+
+    .chips {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding: 14px 2px 2px;
+        scrollbar-width: none;
+    }
+    .chips::-webkit-scrollbar { display: none; }
+    .chip {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 18px;
+        border: 1px solid var(--shop-line);
+        border-radius: 999px;
+        background: #fff;
+        color: var(--shop-ink);
+        font: inherit;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: background .2s, color .2s, border-color .2s;
+    }
+    .chip:hover { border-color: var(--shop-accent); }
+    .chip:focus-visible { outline: 3px solid rgba(181, 101, 74, 0.4); outline-offset: 2px; }
+    .chip .count {
+        font-size: 0.72rem;
+        opacity: 0.65;
+    }
+    .chip.active {
+        background: var(--shop-accent);
+        border-color: var(--shop-accent);
+        color: #fff;
+    }
+
+    /* ---------- Results ---------- */
+    .results-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 28px 0 8px;
+        font-size: 0.9rem;
+        color: var(--shop-muted);
+    }
+    .results-bar strong { color: var(--shop-ink); }
+    .reset-link {
+        background: none;
+        border: 0;
+        padding: 0;
+        font: inherit;
+        color: var(--shop-accent);
+        cursor: pointer;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+
+    .shop-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 26px;
+        padding: 16px 0 80px;
+    }
+    @media (max-width: 1100px) { .shop-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 800px)  { .shop-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; } }
+    @media (max-width: 480px)  { .shop-grid { grid-template-columns: 1fr; } }
+
+    .shop-card {
+        background: var(--shop-card);
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid var(--shop-line);
+        display: flex;
+        flex-direction: column;
+        transition: transform .25s, box-shadow .25s;
+    }
+    .shop-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 32px rgba(91, 55, 40, 0.12);
+    }
+    .shop-card.hidden { display: none; }
+
+    .shop-thumb {
+        position: relative;
+        aspect-ratio: 1 / 1.05;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        overflow: hidden;
+    }
+    .shop-thumb .mini-candle {
+        position: relative;
+        width: 34%;
+        height: 44%;
+        border-radius: 8px 8px 12px 12px;
+        margin-bottom: 14%;
+        box-shadow: inset -8px 0 14px rgba(0, 0, 0, 0.08), 0 14px 18px rgba(60, 30, 20, 0.18);
+    }
+    .shop-thumb .mini-candle::before {
+        content: "";
+        position: absolute;
+        top: -14px;
+        left: 50%;
+        width: 2px;
+        height: 14px;
+        background: #4a3328;
+        transform: translateX(-50%);
+    }
+    .shop-thumb .mini-candle::after {
+        content: "";
+        position: absolute;
+        top: -34px;
+        left: 50%;
+        width: 14px;
+        height: 24px;
+        border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+        background: radial-gradient(circle at 50% 70%, #fff3b0, #ffb347 70%, rgba(255, 140, 50, 0));
+        transform: translateX(-50%);
+        animation: flicker 2.6s ease-in-out infinite;
+    }
+    @keyframes flicker {
+        0%, 100% { transform: translateX(-50%) scale(1); }
+        50% { transform: translateX(-50%) scale(1.08, 0.94); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .shop-thumb .mini-candle::after { animation: none; }
+        .shop-card, .chip { transition: none; }
+    }
+
+    /* candle colour themes */
+    .t-vanilla   { background: linear-gradient(160deg, #fbeed6, #f3d9ae); }
+    .t-vanilla   .mini-candle { background: linear-gradient(#fff6e3, #f0d9aa); }
+    .t-rose      { background: linear-gradient(160deg, #fbe4e6, #f2bfc6); }
+    .t-rose      .mini-candle { background: linear-gradient(#fdeef0, #eba8b3); }
+    .t-amber     { background: linear-gradient(160deg, #f6dcbc, #e0a76c); }
+    .t-amber     .mini-candle { background: linear-gradient(#f0c28a, #c98443); }
+    .t-bloom     { background: linear-gradient(160deg, #f0e3f4, #d8bfe6); }
+    .t-bloom     .mini-candle { background: linear-gradient(#f6ecf9, #c7a6dc); }
+    .t-eucalypt  { background: linear-gradient(160deg, #e2efe4, #b9d6bf); }
+    .t-eucalypt  .mini-candle { background: linear-gradient(#eef7ef, #9cc4a5); }
+    .t-lemon     { background: linear-gradient(160deg, #f6f3cf, #e8e08c); }
+    .t-lemon     .mini-candle { background: linear-gradient(#fbf9dc, #ddd36e); }
+    .t-jasmine   { background: linear-gradient(160deg, #fdf4e8, #f1dcc0); }
+    .t-jasmine   .mini-candle { background: linear-gradient(#fffaf2, #ecd3ae); }
+    .t-honey     { background: linear-gradient(160deg, #f9e5b5, #e9b95a); }
+    .t-honey     .mini-candle { background: linear-gradient(#fbe9b8, #dca23a); }
+    .t-caramel   { background: linear-gradient(160deg, #efd2b0, #c98f5b); }
+    .t-caramel   .mini-candle { background: linear-gradient(#e6bd8f, #b57539); }
+    .t-mint      { background: linear-gradient(160deg, #dcf1ec, #a8d8cd); }
+    .t-mint      .mini-candle { background: linear-gradient(#e9f7f3, #8ccbbd); }
+    .t-giftbox   { background: linear-gradient(160deg, #f4d9d0, #d99f8e); }
+    .t-giftbox   .mini-candle { background: linear-gradient(#f9e6df, #cf8875); }
+    .t-festive   { background: linear-gradient(160deg, #e9d6d3, #b98a86); }
+    .t-festive   .mini-candle { background: linear-gradient(#f0e0dd, #a8706b); }
+
+    .shop-badge {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        padding: 5px 12px;
+        border-radius: 999px;
+        background: var(--shop-accent);
+        color: #fff;
+        font-size: 0.68rem;
+        font-weight: 500;
+        letter-spacing: 0.05em;
+    }
+    .shop-badge.new { background: #4f7a63; }
+
+    .wish {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 36px;
+        height: 36px;
+        border: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.9);
+        color: var(--shop-accent);
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: transform .2s;
+    }
+    .wish:hover { transform: scale(1.1); }
+    .wish.on { background: var(--shop-accent); color: #fff; }
+    .wish:focus-visible, .add-btn:focus-visible {
+        outline: 3px solid rgba(181, 101, 74, 0.45);
+        outline-offset: 2px;
+    }
+
+    .shop-info {
+        padding: 18px 18px 20px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+    .shop-cat {
+        font-size: 0.75rem;
+        color: var(--shop-muted);
+        margin: 0 0 4px;
+    }
+    .shop-info h3 {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.45rem;
+        font-weight: 600;
+        margin: 0 0 6px;
+    }
+    .shop-desc {
+        font-size: 0.85rem;
+        line-height: 1.6;
+        color: var(--shop-muted);
+        font-weight: 300;
+        margin: 0 0 16px;
+        flex: 1;
+    }
+    .shop-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+    .shop-bottom strong {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+    .add-btn {
+        border: 1px solid var(--shop-accent);
+        background: transparent;
+        color: var(--shop-accent);
+        padding: 9px 16px;
+        border-radius: 999px;
+        font: inherit;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: background .2s, color .2s;
+    }
+    .add-btn:hover { background: var(--shop-accent); color: #fff; }
+
+    /* ---------- Empty state ---------- */
+    .empty-state {
+        display: none;
+        text-align: center;
+        padding: 70px 20px 110px;
+    }
+    .empty-state.visible { display: block; }
+    .empty-state .empty-icon { font-size: 3rem; }
+    .empty-state h3 {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.9rem;
+        margin: 10px 0 6px;
+    }
+    .empty-state p { color: var(--shop-muted); margin: 0 0 20px; }
+    .empty-state .btn-reset {
+        border: 0;
+        background: var(--shop-accent);
+        color: #fff;
+        padding: 12px 26px;
+        border-radius: 999px;
+        font: inherit;
+        cursor: pointer;
+    }
+    .empty-state .btn-reset:hover { background: var(--shop-accent-dark); }
+
+    /* ---------- Toast ---------- */
+    .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 28px;
+        transform: translate(-50%, 30px);
+        background: var(--shop-ink);
+        color: #fff;
+        padding: 12px 22px;
+        border-radius: 999px;
+        font-size: 0.88rem;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .25s, transform .25s;
+        z-index: 100;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (max-width: 600px) {
+        .shop-hero { padding: 48px 0 28px; }
+        .sort-box label { display: none; }
+        .sort-box { flex: 1 1 100%; }
+        .sort-box select { width: 100%; }
+        .search-box { max-width: none; flex-basis: 100%; }
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="shop-page">
+
+    <!-- ================= HEADER ================= -->
+    <section class="shop-hero">
+        <div class="shop-container">
+            <div class="breadcrumb">
+                <a href="/">Home</a> / Shop
+            </div>
+            <h1>Our Candle Collection</h1>
+            <p>
+                Hand-poured in small batches. Search by name, pick a
+                fragrance family, or sort by price to find your candle.
+            </p>
+        </div>
+    </section>
+
+    <!-- ================= TOOLBAR ================= -->
+    <section class="shop-toolbar" aria-label="Search, filter and sort products">
+        <div class="shop-container">
+            <div class="toolbar-row">
+                <div class="search-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <path d="m20 20-3.5-3.5"></path>
+                    </svg>
+                    <input type="search" id="searchInput" placeholder="Search candles, e.g. vanilla or rose"
+                           aria-label="Search candles" autocomplete="off">
+                    <button type="button" class="search-clear" id="searchClear" aria-label="Clear search">&times;</button>
+                </div>
+
+                <div class="sort-box">
+                    <label for="sortSelect">Sort by</label>
+                    <select id="sortSelect">
+                        <option value="featured">Featured</option>
+                        <option value="price-asc">Price: low to high</option>
+                        <option value="price-desc">Price: high to low</option>
+                        <option value="name-asc">Name: A to Z</option>
+                        <option value="name-desc">Name: Z to A</option>
+                        <option value="newest">Newest first</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="chips" id="chips" role="group" aria-label="Filter by category">
+                <button type="button" class="chip active" data-category="all">All <span class="count"></span></button>
+                <button type="button" class="chip" data-category="floral">🌸 Floral <span class="count"></span></button>
+                <button type="button" class="chip" data-category="fresh">🌿 Fresh <span class="count"></span></button>
+                <button type="button" class="chip" data-category="sweet">🍯 Sweet <span class="count"></span></button>
+                <button type="button" class="chip" data-category="gift">🎁 Gift Sets <span class="count"></span></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= PRODUCTS ================= -->
+    <section class="shop-container">
+        <div class="results-bar">
+            <span id="resultsText" aria-live="polite">Showing <strong>12</strong> candles</span>
+            <button type="button" class="reset-link" id="resetLink" hidden>Reset filters</button>
+        </div>
+
+        <!--
+            NOTE: To load these from your database later, replace the cards below with:
+
+            {% comment %}
+            {% for p in products %}
+            <article class="shop-card"
+                     data-name="{{ p.name }}"
+                     data-category="{{ p.category.slug }}"
+                     data-price="{{ p.price }}"
+                     data-order="{{ forloop.counter }}"
+                     data-tags="{{ p.tags }}">
+                ...
+            </article>
+            {% endfor %}
+            {% endcomment %}
+
+            Keep the data-* attributes, the JS below reads them.
+        -->
+        <div class="shop-grid" id="shopGrid">
+
+            <article class="shop-card" data-name="Vanilla Dream" data-category="sweet" data-price="499" data-order="1" data-tags="vanilla creamy warm soy">
+                <div class="shop-thumb t-vanilla">
+                    <span class="shop-badge">BEST SELLER</span>
+                    <button class="wish" aria-label="Save Vanilla Dream to wishlist" aria-pressed="false">♡</button>
+                    <div class="mini-candle"></div>
+                </div>
+                <div class="shop-info">
+                    <p class="shop-cat">Scented Candle</p>
+                    <h3>Vanilla Dream</h3>
+                    <p class="shop-desc">Warm vanilla with a soft creamy fragrance.</p>
+                    <div class="shop-bottom">
+                        <strong>₹499</strong>
+                        <button class="add-btn">Add to Cart</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="shop-card" data-name="Rose Garden" data-category="floral" data-price="599" data-order="2" data-tags="rose petals evening romantic">
+                <div class="shop-thumb t-rose">
+                    <span class="shop-badge new">NEW</span>
+                    <button class="wish" aria-label="Save Rose Garden to wishlist" aria-pressed="false">♡</button>
+                    <div class="mini-candle"></div>
+                </div>
+                <div class="shop-info">
+                    <p class="shop-cat">Floral Candle</p>
+                    <h3>Rose Garden</h3>
+                    <p class="shop-desc">A delicate rose fragrance for peaceful evenings.</p>
+                    <div class="shop-bottom">
+                        <strong>₹599</strong>
+                        <button class="add-btn">Add to Cart</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="shop-card" data-name="Amber Glow" data-category="sweet" data-price="699" data-order="3" data-tags="amber luxury warm musk">
+                <div class="shop-thumb t-amber">
+                    <button class="wish" aria-label="Save Amber Glow to wishlist" aria-pressed="false">♡</button>
+                    <div class="mini-candle"></div>
+                </div>
+                <div class="shop-info">
+                    <p class="shop-cat">Luxury Candle</p>
+                    <h3>Amber Glow</h3>
+                    <p class="shop-desc">A warm amber fragrance with a luxurious finish.</p>
+                    <div class="shop-bottom">
+                        <strong>₹699</strong>
+                        <button class="add-btn">Add to Cart</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="shop-card" data-name="Cozy Bloom" data-category="floral" data-price="449" data-order="4" data-tags="decorative flower special spaces">
+                <div class="shop-thumb t-bloom">
+                    <span class="shop-badge">POPULAR</span>
+                    <button class="wish" aria-label="Save Cozy Bloom to wishlist" aria-pressed="false">♡</button>
+                    <div class="mini-candle"></div>
+                </div>
+                <div class="shop-info">
+                    <p class="shop-cat">Decorative Candle</p>
+                    <h3>Cozy Bloom</h3>
+                    <p class="shop-desc">A beautiful candle designed for your special spaces.</p>
+                    <div class="shop-bottom">
+                        <strong>₹449</strong>
+                        <button class="add-btn">Add to Cart</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="shop-card" data-name="Eucalyptus Breeze" data-category="fresh" data-price="549" data-order="5" data-tags="eucalyptus mint spa clean herbal">
+                <div class="shop-thumb t-eucalypt">
+                    <span class="shop-badge new">NEW</span>
+                    <button class="wish" aria-label="Save Eucalyptus Breeze to wishlist" aria-pressed="false">♡</button>
+                    <div class="mini-candle"></div>
+                </div>
+                <div class="shop-info">
+                    <p class="shop-cat">Fresh Candle</p>
+                    <h3>Eucalyptus Breeze</h3>
+                    <p class="shop-desc">Crisp eucalyptus that feels like a morning in the hills.</p>
+                    <div class="shop-bottom">
+                        <strong>₹549</strong>
+                        <button class="add-btn">Add to Cart</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="shop-card" data-name="Citrus Morning" data-category="fresh" data-price="399" data-order="6" data-tags="lemon orange citrus zesty bright">
+                <div class="shop-thumb t-lemon">
+                    <button class="wish" aria-label="Save Citrus Morning to wishlist" aria-pressed="false">♡</button>
+                    <div class="mini-candle"></div>
+                </div>
+                <div class="shop-info">
+                    <p class="shop-cat">Fresh Candle</p>
+                    <h3>Citrus Morning</h3>
+                    <p class="shop-desc">Bright lemon and orange zest to wake up your space.</p>
+                    <div class="shop-bottom">
+                        <strong>₹399</strong>
+                        <button class="add-btn">Add to Cart</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="shop-card" data-name="Jasmine Night" data-category="floral" data-price="649" data-order="7" data-tags="jasmine night calm floral">
+                <div class="shop-thumb t-jasmine">
+                    <span class="shop-badge">BEST SELLER</span>
+                    <button class="wish" aria-label="Save Jasmine Night to wishlist" aria-pressed="false">♡</button>
+                    <div class="mini-candle"></div>
+                </div>
+                <div class="shop-info">
+                    <p class="shop-cat">Floral Candle</p>
+                    <h3>Jasmine Night</h3>
+                    <p class="shop-desc">Soft jasmine that turns quiet nights into a ritual.</p>
+                    <div class="shop-bottom">
+                        <strong>₹649</strong>
+                        <button class="add-btn">Add to Cart</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="shop-card" data-name="Honey Comb" data-category="sweet" data-price="479" data-order="8" data-tags="honey sweet beeswax golden">
+                <div class="shop-thumb t-honey">
+                    <button class="wish" aria-label="Save Honey Comb to wishlist" aria-pressed="false">♡</button>
+                    <div class="mini-candle"></div>
+                </div>
+                <div class="shop-info">
+                    <p class="shop-cat">Scented Candle</p>
+                    <h3>Honey Comb</h3>
+                    <p class="shop-desc">Golden honey notes with a gentle, sweet warmth.</p>
+                    <div class="shop-bottom">
+                        <strong>₹479</strong>
+                        <button class="add-btn">Add to Cart</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="shop-card" data-name="Salted Caramel" data-category="sweet" data-price="529" data-order="9" data-tags="caramel salted dessert cozy">
+                <div class="shop-thumb t-caramel">
+                    <span class="shop-badge new">NEW</span>
+                    <button class="wish" aria-label="Save Salted Caramel to wishlist" aria-pressed="false">♡</button>
+                    <div class="mini-candle"></div>
+                </div>
+                <div class="shop-info">
+                    <p class="shop-cat">Scented Candle</p>
+                    <h3>Salted Caramel</h3>
+                    <p class="shop-desc">Buttery caramel with a pinch of sea salt.</p>
+                    <div class="shop-bottom">
+                        <strong>₹529</strong>
+                        <button class="add-btn">Add to Cart</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="shop-card" data-name="Sea Mint" data-category="fresh" data-price="429" data-order="10" data-tags="sea mint ocean cool fresh">
+                <div class="shop-thumb t-mint">
+                    <button class="wish" aria-label="Save Sea Mint to wishlist" aria-pressed="false">♡</button>
+                    <div class="mini-candle"></div>
+                </div>
+                <div class="shop-info">
+                    <p class="shop-cat">Fresh Candle</p>
+                    <h3>Sea Mint</h3>
+                    <p class="shop-desc">Cool mint and ocean air for a clean, light room.</p>
+                    <div class="shop-bottom">
+                        <strong>₹429</strong>
+                        <button class="add-btn">Add to Cart</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="shop-card" data-name="Birthday Glow Set" data-category="gift" data-price="1299" data-order="11" data-tags="gift set birthday box trio">
+                <div class="shop-thumb t-giftbox">
+                    <span class="shop-badge">GIFT PICK</span>
+                    <button class="wish" aria-label="Save Birthday Glow Set to wishlist" aria-pressed="false">♡</button>
+                    <div class="mini-candle"></div>
+                </div>
+                <div class="shop-info">
+                    <p class="shop-cat">Gift Set</p>
+                    <h3>Birthday Glow Set</h3>
+                    <p class="shop-desc">Three mini candles in a keepsake box, ready to gift.</p>
+                    <div class="shop-bottom">
+                        <strong>₹1,299</strong>
+                        <button class="add-btn">Add to Cart</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="shop-card" data-name="Festive Light Box" data-category="gift" data-price="1499" data-order="12" data-tags="gift festive diwali celebration box">
+                <div class="shop-thumb t-festive">
+                    <span class="shop-badge new">NEW</span>
+                    <button class="wish" aria-label="Save Festive Light Box to wishlist" aria-pressed="false">♡</button>
+                    <div class="mini-candle"></div>
+                </div>
+                <div class="shop-info">
+                    <p class="shop-cat">Gift Set</p>
+                    <h3>Festive Light Box</h3>
+                    <p class="shop-desc">Five candles for festive evenings, packed with care.</p>
+                    <div class="shop-bottom">
+                        <strong>₹1,499</strong>
+                        <button class="add-btn">Add to Cart</button>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+
+        <!-- Empty state -->
+        <div class="empty-state" id="emptyState">
+            <div class="empty-icon">🕯️</div>
+            <h3>No candles match your search</h3>
+            <p>Try a different word, or clear the filters to see everything.</p>
+            <button type="button" class="btn-reset" id="emptyReset">Clear filters</button>
+        </div>
+    </section>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+(function () {
+    const grid       = document.getElementById('shopGrid');
+    const cards      = Array.from(grid.querySelectorAll('.shop-card'));
+    const searchEl   = document.getElementById('searchInput');
+    const clearBtn   = document.getElementById('searchClear');
+    const sortEl     = document.getElementById('sortSelect');
+    const chips      = Array.from(document.querySelectorAll('.chip'));
+    const resultsTxt = document.getElementById('resultsText');
+    const resetLink  = document.getElementById('resetLink');
+    const emptyState = document.getElementById('emptyState');
+    const emptyReset = document.getElementById('emptyReset');
+    const toast      = document.getElementById('toast');
+
+    const state = { q: '', category: 'all', sort: 'featured' };
+
+    // ----- category counts on chips -----
+    chips.forEach(chip => {
+        const cat = chip.dataset.category;
+        const n = cat === 'all'
+            ? cards.length
+            : cards.filter(c => c.dataset.category === cat).length;
+        chip.querySelector('.count').textContent = '(' + n + ')';
+    });
+
+    // ----- apply search + filter + sort -----
+    function apply() {
+        const q = state.q.trim().toLowerCase();
+
+        // 1. filter
+        let visible = cards.filter(card => {
+            const inCategory = state.category === 'all' || card.dataset.category === state.category;
+            if (!inCategory) return false;
+            if (!q) return true;
+            const haystack = (card.dataset.name + ' ' + card.dataset.tags + ' ' + card.textContent).toLowerCase();
+            return q.split(/\s+/).every(word => haystack.includes(word));
+        });
+
+        // 2. sort
+        const num = (c, key) => parseFloat(c.dataset[key]);
+        const sorters = {
+            'featured':   (a, b) => num(a, 'order') - num(b, 'order'),
+            'price-asc':  (a, b) => num(a, 'price') - num(b, 'price'),
+            'price-desc': (a, b) => num(b, 'price') - num(a, 'price'),
+            'name-asc':   (a, b) => a.dataset.name.localeCompare(b.dataset.name),
+            'name-desc':  (a, b) => b.dataset.name.localeCompare(a.dataset.name),
+            'newest':     (a, b) => num(b, 'order') - num(a, 'order')
+        };
+        visible.sort(sorters[state.sort]);
+
+        // 3. render (hide all, then re-append visible in order)
+        cards.forEach(c => c.classList.add('hidden'));
+        visible.forEach(c => {
+            c.classList.remove('hidden');
+            grid.appendChild(c);
+        });
+
+        // 4. UI feedback
+        const count = visible.length;
+        resultsTxt.innerHTML = 'Showing <strong>' + count + '</strong> ' + (count === 1 ? 'candle' : 'candles');
+        emptyState.classList.toggle('visible', count === 0);
+        grid.style.display = count === 0 ? 'none' : '';
+
+        const filtersActive = q || state.category !== 'all' || state.sort !== 'featured';
+        resetLink.hidden = !filtersActive;
+        clearBtn.classList.toggle('visible', !!state.q);
+
+        // keep the URL shareable
+        const params = new URLSearchParams();
+        if (q) params.set('q', state.q.trim());
+        if (state.category !== 'all') params.set('category', state.category);
+        if (state.sort !== 'featured') params.set('sort', state.sort);
+        const qs = params.toString();
+        history.replaceState(null, '', location.pathname + (qs ? '?' + qs : ''));
+    }
+
+    function setCategory(cat) {
+        state.category = cat;
+        chips.forEach(c => {
+            const on = c.dataset.category === cat;
+            c.classList.toggle('active', on);
+            c.setAttribute('aria-pressed', on);
+        });
+    }
+
+    function resetAll() {
+        state.q = ''; state.sort = 'featured';
+        searchEl.value = '';
+        sortEl.value = 'featured';
+        setCategory('all');
+        apply();
+    }
+
+    // ----- events -----
+    let timer;
+    searchEl.addEventListener('input', () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => { state.q = searchEl.value; apply(); }, 150);
+    });
+    clearBtn.addEventListener('click', () => {
+        searchEl.value = ''; state.q = ''; apply(); searchEl.focus();
+    });
+    sortEl.addEventListener('change', () => { state.sort = sortEl.value; apply(); });
+    chips.forEach(chip => chip.addEventListener('click', () => {
+        setCategory(chip.dataset.category); apply();
+    }));
+    resetLink.addEventListener('click', resetAll);
+    emptyReset.addEventListener('click', resetAll);
+
+    // ----- wishlist + add to cart -----
+    let toastTimer;
+    function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+    grid.addEventListener('click', e => {
+        const wish = e.target.closest('.wish');
+        if (wish) {
+            const on = wish.classList.toggle('on');
+            wish.textContent = on ? '♥' : '♡';
+            wish.setAttribute('aria-pressed', on);
+            return;
+        }
+        const add = e.target.closest('.add-btn');
+        if (add) {
+            const name = add.closest('.shop-card').dataset.name;
+            showToast(name + ' added to cart');
+            // TODO: replace with a real request, e.g. fetch("{% url 'shop' %}") to your add-to-cart view
+        }
+    });
+
+    // ----- read initial state from URL (?category=floral&q=rose&sort=price-asc) -----
+    const params = new URLSearchParams(location.search);
+    const validCats = chips.map(c => c.dataset.category);
+    if (params.get('category') && validCats.includes(params.get('category'))) setCategory(params.get('category'));
+    if (params.get('q')) { state.q = params.get('q'); searchEl.value = state.q; }
+    if (params.get('sort') && sortEl.querySelector('option[value="' + params.get('sort') + '"]')) {
+        state.sort = params.get('sort'); sortEl.value = state.sort;
+    }
+    apply();
+})();
+</script>
+{% endblock %}

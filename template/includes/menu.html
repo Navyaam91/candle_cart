@@ -1,0 +1,19 @@
+<!-- ================= HEADER ================= -->
+<header class="header">
+    <div class="container nav">
+        <a href="{% url 'home' %}" class="logo">Nedora</a>
+
+        <nav class="menu">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'shop' %}">Shop</a>
+            <a href="#about">About</a>
+            <a href="#why-us">Why Us</a>
+            <a href="#contact">Contact</a>
+        </nav>
+
+        <div class="nav-icons">
+            <button type="button">⌕</button>
+            <a href="{% url 'cart' %}" aria-label="Shopping Cart">🛒</a>
+        </div>
+    </div>
+</header>
